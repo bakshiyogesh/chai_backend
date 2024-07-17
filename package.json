@@ -2,11 +2,18 @@
   "name": "chai_backend",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon src/index.js"
+
   },
-  "keywords": [],
+  "keywords": [
+    "Javascript"
+  ],
   "author": "Hackma128@",
   "license": "ISC",
-  "description": "a learning for backend"
+  "description": "a learning for backend",
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  }
 }
