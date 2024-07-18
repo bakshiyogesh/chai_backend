@@ -18,14 +18,21 @@ const registerUser=asyncHandler(async (req,res)=>{
 
         throw new ApiError(400,"All fields are required")
     }
+    // if("/^\S+@\S+\.\S+$/".test(email)){
+    //     throw new ApiError(400,"Enter Correct Email Address")
+    // }
     // console.log('email',email,password)
 
-    const isUserExisted=User.findOne({$or:[{username},{email}]})
+    const isUserExisted=await User.findOne({$or:[{username},{email}]})
     if(isUserExisted){
         throw new ApiError(409,"User with email or username already exist.")
     }
     const avatarLocalPath=req.files?.avatar[0]?.path;
-    const coverImageLocalPath=req.files?.coverImage[0]?.path;
+    // const coverImageLocalPath=req.files?.coverImage[0]?.path;
+    let coverImageLocalPath;
+    if(req.files&& Array.isArray(req.files.coverImage)&&req.files.coverImage.length>0){
+        coverImageLocalPath=req.files.coverImage[0].path;
+    }
 
     if(!avatarLocalPath){
         throw new ApiError(400,"Avatar is required.");
@@ -43,10 +50,10 @@ const registerUser=asyncHandler(async (req,res)=>{
         email,
         coverImage:coverImage?.url||"",
         password,
-        username:username.tolowerCase()
+        username:username.toLowerCase()
     })
 
-    const createdUser=User.findById(user._id).select("-password -refreshToken"); //for deselecting the password and refreshtoken
+    const createdUser=await User.findById(user._id).select("-password -refreshToken"); //for deselecting the password and refreshtoken
 
     if(!createdUser){
         throw new ApiError(500,"Something went wrong while registering the user.")
