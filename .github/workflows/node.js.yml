@@ -25,6 +25,13 @@ jobs:
     - run: npm ci
     - run: npm run build --if-present
     - run: npm test --if-present
+    - name: Build and push docker image
+      uses: mr-smithers-excellent/docker-build-push@v4
+      with:
+        image: yogesh589/nodejs 
+        registry: docker.io
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
 
   publish:
     needs: build
